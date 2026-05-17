@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@matrix-org/olm": "^3.2.15",
-    "matrix-js-sdk": "^41.5.0",
+    "matrix-js-sdk": "^24.1.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   }
