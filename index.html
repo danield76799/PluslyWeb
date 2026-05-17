@@ -296,8 +296,24 @@
                 setLoading(true);
                 setError('');
                 try {
+                    console.log('Matrix SDK available:', !!matrixcs);
+                    console.log('Matrix SDK methods:', Object.keys(matrixcs || {}));
+                    
+                    if (!matrixcs || !matrixcs.createClient) {
+                        throw new Error('Matrix SDK niet correct geladen. Vernieuw de pagina.');
+                    }
+                    
+                    console.log('Creating client with baseUrl:', homeserver);
                     const tempClient = matrixcs.createClient({ baseUrl: homeserver });
+                    console.log('Temp client created:', tempClient);
+                    
+                    console.log('Attempting login...');
                     const response = await tempClient.loginWithPassword(username, password);
+                    console.log('Login response:', response);
+                    
+                    if (!response || !response.access_token) {
+                        throw new Error('Geen access token ontvangen van server');
+                    }
                     
                     const authenticatedClient = matrixcs.createClient({
                         baseUrl: homeserver,
@@ -307,7 +323,8 @@
                     
                     setClient(authenticatedClient);
                 } catch (err) {
-                    setError('Inloggen mislukt: ' + (err.message || 'Onbekende fout'));
+                    console.error('Login error:', err);
+                    setError('Inloggen mislukt: ' + (err.message || err.toString() || 'Onbekende fout'));
                 }
                 setLoading(false);
             };
